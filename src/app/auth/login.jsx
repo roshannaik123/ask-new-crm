@@ -64,7 +64,7 @@ const Login = () => {
         username: user.username,
       });
 
-      if (res.data.code == "400") {
+      if (res.data.code == "400") { 
         toast.error("Mobile No is not Registered");
       } else {
         toast.success("OTP Sent to Mobile No.");

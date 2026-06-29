@@ -7,6 +7,7 @@ import NotFound from "@/app/errors/not-found";
 import Settings from "@/app/setting/setting";
 import ErrorBoundary from "@/components/error-boundry/error-boundry";
 import LoadingBar from "@/components/loader/loading-bar";
+import Register from "@/app/auth/Register";
 
 // Dashboard & Profile
 const Home = lazy(() => import("@/pages/dashboard/Home"));
@@ -56,6 +57,7 @@ function AppRoutes() {
       <Routes>
         <Route path="/" element={<AuthRoute />}>
           <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/maintenance" element={<Maintenance />} />
         </Route>
 
