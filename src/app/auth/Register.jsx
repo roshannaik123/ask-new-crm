@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -73,7 +73,18 @@ const Register = () => {
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
   const [otpDigits, setOtpDigits] = useState(["", "", "", ""]);
   const [otpLoading, setOtpLoading] = useState(false);
+  const [otpTimer, setOtpTimer] = useState(60);
   const otpInputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+
+  useEffect(() => {
+    let interval;
+    if (otpDialogOpen && otpTimer > 0) {
+      interval = setInterval(() => {
+        setOtpTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [otpDialogOpen, otpTimer]);
 
   // Active Select state (floating labels)
   const [activeSelect, setActiveSelect] = useState(null);
@@ -109,18 +120,21 @@ const Register = () => {
 
   // ---------- Form State (pre‑filled for testing) ----------
   const [formData, setFormData] = useState({
+    // --- Personal ---
     appli_name: "",
     user_gender: "",
     user_mobile_number: "",
     user_qualification: "",
     user_proof_identification: "",
-    email: "",
-    f_mgotra: "",
+    appli_email: "",
+    f_mgotra: "", // pick a gotra that exists in your list
     f_mdob: "",
     f_mblood: "",
-    f_mstate: "",
+    f_mstate: "", // pick a state that exists in your list
     native_place: "",
-    residential_add: "",
+
+    // --- Contact ---
+    residential_add: "", //residential
     residential_landmark: "",
     residential_city: "",
     residential_pin: "",
@@ -128,22 +142,26 @@ const Register = () => {
     office_landmark: "",
     office_city: "",
     office_pin: "",
-    office_phone: "",
     mailaddress: "",
+    donate_blood: "",
+    whats_app: "",
     user_resident_to_bang_since: "",
+
+    // --- Family ---
     married: "",
     f_mannidate: "",
     spouse_name: "",
     user_pan_no: "",
-    spouse_mobile: "",
-    spouse_dob: "",
-    spouse_blood_group: "",
-    spouse_qualification: "",
-    father_name: "",
+    spouse_mobile: "", //spouse phone number
+    spouse_dob: "", //date of birth
+    f_msblood: "", //blood
+    f_mfdob: "",
+    f_mqualispouse: "", //qualification
+    father_name: "", //father name
     father_mobile: "",
-    father_dob: "",
-    whats_app: "",
-    donate_blood: "",
+    f_nativeplace: "",
+
+    // --- Introduction ---
     f_mintroby: "",
     f_mmemno: "",
     f_mintrophone: "",
@@ -151,8 +169,11 @@ const Register = () => {
     f_motherorga: "",
     org_name: "",
     org_type: "",
-    org_product: "",
-    membership_plan: "",
+
+    // --- Miscellaneous ---
+
+    // --- Membership ---
+    priceaga: "5100.00", // or "11100.00"
   });
 
   const onInputChange = (e) => {
@@ -202,6 +223,7 @@ const Register = () => {
   };
 
   const handleResendOtp = async () => {
+    if (otpTimer > 0) return;
     try {
       const response = await apiClient.post(WEB_API.registerOtp, {
         appli_mno: formData.user_mobile_number,
@@ -209,6 +231,7 @@ const Register = () => {
       if (response.data.code === 200 || response.data.code === "200") {
         toast.success("OTP resent successfully!");
         setOtpDigits(["", "", "", ""]);
+        setOtpTimer(60);
         otpInputRefs[0].current?.focus();
       } else {
         toast.error(response.data.msg || "Failed to resend OTP");
@@ -230,11 +253,38 @@ const Register = () => {
     try {
       const data = new FormData();
 
-      // Append all text fields from formData
+      // Map frontend UI names to backend API names
+      const payloadMap = {
+        user_gender: "appli_gender",
+        user_mobile_number: "appli_mno",
+        user_qualification: "f_mqualiself",
+        user_proof_identification: "proof_iden",
+        father_name: "f_mfname",
+        father_mobile: "f_mfmno",
+        residential_add: "f_mresadd",
+        residential_landmark: "f_mresland",
+        residential_city: "f_mrescity",
+        residential_pin: "f_mrespin",
+        office_add: "f_moffiadd",
+        office_landmark: "f_moffiland",
+        office_city: "f_mofficity",
+        office_phone: "f_moffiphone", // adjust to backend key
+
+        office_pin: "f_moffipin",
+        spouse_name: "f_msname",
+        spouse_mobile: "f_msmno",
+        spouse_dob: "f_msdob",
+        user_resident_to_bang_since: "f_mresibang",
+        donate_blood: "donateblood",
+        priceaga: "priceaga", // or "f_mprice" / "amount" — adjust to your API
+      };
+
+      // Append all text fields from formData mapping to backend keys
       Object.keys(formData).forEach((key) => {
         const val = formData[key];
         if (val !== null && val !== undefined && val !== "") {
-          data.append(key, val);
+          const mappedKey = payloadMap[key] || key;
+          data.append(mappedKey, val);
         }
       });
 
@@ -247,8 +297,8 @@ const Register = () => {
         data.append("agrawal_images", selectedFile);
       }
       if (selectedFiledoc) {
-        data.append("user_proof_doc", selectedFiledoc);
-        data.append("user_proof_docs", selectedFiledoc);
+        data.append("upload_doc_proof", selectedFiledoc);
+        data.append("upload_doc_proof", selectedFiledoc);
       }
 
       // Call the insert registration API
@@ -306,7 +356,7 @@ const Register = () => {
       toast.error("Mobile Number must be 10 digits");
       return;
     }
-    if (!formData.email) {
+    if (!formData.appli_email) {
       toast.error("Email Address is required");
       return;
     }
@@ -413,6 +463,7 @@ const Register = () => {
       });
       if (response.data.code === 200 || response.data.code === "200") {
         toast.success("OTP sent successfully!");
+        setOtpTimer(60);
         setOtpDialogOpen(true);
         // Focus first input after dialog opens
         setTimeout(() => otpInputRefs[0].current?.focus(), 100);
@@ -577,10 +628,10 @@ const Register = () => {
                 <div className="relative">
                   <Input
                     id="email"
-                    name="email"
+                    name="appli_email"
                     type="email"
                     placeholder=""
-                    value={formData.email}
+                    value={formData.appli_email}
                     onChange={onInputChange}
                     required
                     className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
@@ -867,10 +918,10 @@ const Register = () => {
 
                 <div className="relative">
                   <Input
-                    id="father_dob"
-                    name="father_dob"
+                    id="f_mfdob"
+                    name="f_mfdob"
                     type="date"
-                    value={formData.father_dob}
+                    value={formData.f_mfdob}
                     onChange={onInputChange}
                     className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
@@ -1353,54 +1404,54 @@ const Register = () => {
                 )}
 
                 {/* MEMBERSHIP FEES OPTIONS */}
-                <div className="col-span-full border-t pt-6 mt-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                  <div className="flex flex-col gap-4 w-full">
+                <div className="col-span-full border-t pt-6 mt-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100">
+                  <div className="flex flex-col lg:flex-row gap-4 w-full">
                     {/* Life Member */}
-                    <label className="flex items-center justify-between cursor-pointer w-full bg-white p-4 rounded-xl border hover:border-rose-400 transition-all">
-                      <div className="flex items-center gap-3">
+                    <label className="flex items-center justify-between cursor-pointer w-full bg-white p-4 sm:p-5 rounded-2xl border hover:border-rose-400 transition-all shadow-sm">
+                      <div className="flex items-center gap-3 sm:gap-4">
                         <input
                           type="radio"
                           name="membership_plan"
                           value="5100.00"
                           checked={formData.membership_plan === "5100.00"}
                           onChange={onInputChange}
-                          className="w-4 h-4 text-rose-600 border-gray-300 focus:ring-rose-500"
+                          className="w-5 h-5 min-w-[20px] text-rose-600 border-gray-300 focus:ring-rose-500"
                         />
                         <div>
-                          <span className="font-bold text-slate-800 text-sm block">
+                          <span className="font-bold text-slate-800 text-sm sm:text-base block mb-0.5">
                             Life Member
                           </span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs sm:text-sm text-slate-500 block leading-tight">
                             Entry Fee: 100.00 | Membership: 5,000.00
                           </span>
                         </div>
                       </div>
-                      <span className="font-black text-slate-900 text-sm">
+                      <span className="font-black text-slate-900 text-sm sm:text-lg ml-2 whitespace-nowrap">
                         ₹ 5,100.00
                       </span>
                     </label>
 
                     {/* Patron Life Member */}
-                    <label className="flex items-center justify-between cursor-pointer w-full bg-white p-4 rounded-xl border hover:border-rose-400 transition-all">
-                      <div className="flex items-center gap-3">
+                    <label className="flex items-center justify-between cursor-pointer w-full bg-white p-4 sm:p-5 rounded-2xl border hover:border-rose-400 transition-all shadow-sm">
+                      <div className="flex items-center gap-3 sm:gap-4">
                         <input
                           type="radio"
                           name="membership_plan"
                           value="11100.00"
                           checked={formData.membership_plan === "11100.00"}
                           onChange={onInputChange}
-                          className="w-4 h-4 text-rose-600 border-gray-300 focus:ring-rose-500"
+                          className="w-5 h-5 min-w-[20px] text-rose-600 border-gray-300 focus:ring-rose-500"
                         />
                         <div>
-                          <span className="font-bold text-slate-800 text-sm block">
+                          <span className="font-bold text-slate-800 text-sm sm:text-base block mb-0.5">
                             Patron Life Member
                           </span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs sm:text-sm text-slate-500 block leading-tight">
                             Entry Fee: 100.00 | Membership: 11,000.00
                           </span>
                         </div>
                       </div>
-                      <span className="font-black text-slate-900 text-sm">
+                      <span className="font-black text-slate-900 text-sm sm:text-lg ml-2 whitespace-nowrap">
                         ₹ 11,100.00
                       </span>
                     </label>
@@ -1409,20 +1460,20 @@ const Register = () => {
               </div>
 
               {/* SUBMIT BUTTON */}
-              <div className="flex items-center justify-between pt-6 border-t">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t">
                 <Link
                   to="/"
-                  className="text-sm font-semibold text-slate-500 hover:text-slate-800"
+                  className="text-sm font-semibold text-slate-500 hover:text-slate-800 order-2 sm:order-1"
                 >
                   Already a member? Login
                 </Link>
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="h-12 bg-rose-700 hover:bg-rose-600 text-white rounded-xl px-8 shadow-lg shadow-rose-100 font-bold transition-all active:scale-95"
+                  className="w-full sm:w-auto h-12 bg-rose-700 hover:bg-rose-600 text-white rounded-xl px-8 shadow-lg shadow-rose-100 font-bold transition-all active:scale-95 order-1 sm:order-2"
                 >
                   {loading ? (
-                    <span className="flex items-center gap-2">
+                    <span className="flex items-center justify-center gap-2">
                       <Loader2 className="w-4 h-4 animate-spin" /> Submitting...
                     </span>
                   ) : (
@@ -1437,7 +1488,7 @@ const Register = () => {
 
       {/* OTP Verification Dialog */}
       <Dialog open={otpDialogOpen} onOpenChange={setOtpDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="w-[95vw] sm:w-full max-w-md p-5 sm:p-6 rounded-2xl mx-auto">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-center">
               Verify OTP
@@ -1449,7 +1500,7 @@ const Register = () => {
               </span>
             </DialogDescription>
           </DialogHeader>
-          <div className="py-6 flex justify-center gap-3">
+          <div className="py-4 sm:py-6 flex justify-center gap-2 sm:gap-4">
             {[0, 1, 2, 3].map((index) => (
               <Input
                 key={index}
@@ -1459,24 +1510,24 @@ const Register = () => {
                 value={otpDigits[index]}
                 onChange={(e) => handleOtpChange(index, e.target.value)}
                 onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                className="w-14 h-14 text-center text-2xl font-bold border-2 border-slate-200 focus:border-rose-500 rounded-xl transition-all"
+                className="w-12 h-12 sm:w-16 sm:h-16 text-center text-xl sm:text-3xl font-bold border-2 border-slate-200 focus:border-rose-500 rounded-xl sm:rounded-2xl transition-all"
                 autoFocus={index === 0}
               />
             ))}
           </div>
-          <DialogFooter className="flex flex-col sm:flex-row gap-3">
+          <DialogFooter className="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0 w-full">
             <Button
               variant="outline"
               onClick={handleResendOtp}
-              className="rounded-xl"
-              disabled={otpLoading}
+              className="rounded-xl w-full sm:w-auto"
+              disabled={otpLoading || otpTimer > 0}
             >
-              Resend OTP
+              {otpTimer > 0 ? `Resend OTP in ${otpTimer}s` : "Resend OTP"}
             </Button>
             <Button
               onClick={handleVerifyOtp}
               disabled={otpLoading || otpDigits.join("").length !== 4}
-              className="bg-rose-700 hover:bg-rose-600 text-white rounded-xl font-bold"
+              className="bg-rose-700 hover:bg-rose-600 text-white rounded-xl font-bold w-full sm:w-auto"
             >
               {otpLoading ? (
                 <span className="flex items-center gap-2">
