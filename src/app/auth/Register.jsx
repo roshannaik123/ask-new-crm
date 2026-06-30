@@ -659,7 +659,7 @@ const Register = () => {
                     onChange={onInputChange}
                     max={new Date().toISOString().split("T")[0]}
                     required
-                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-7 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="f_mdob"
@@ -760,7 +760,7 @@ const Register = () => {
                     type="file"
                     required
                     onChange={(e) => setSelectedFileDoc(e.target.files[0])}
-                    className="peer h-14 pt-8 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent text-slate-800 text-xs file:mr-2 file:py-1 file:px-2 file:border file:border-gray-300 file:rounded-md file:bg-gray-50 file:text-xs hover:file:bg-gray-100 shadow-none cursor-pointer"
+                    className="peer h-14 pt-7 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent text-slate-800 text-xs file:mr-2 file:py-1 file:px-2 file:border file:border-gray-300 file:rounded-md file:bg-gray-50 file:text-xs hover:file:bg-gray-100 shadow-none cursor-pointer"
                   />
                   <label
                     htmlFor="user_proof_doc"
@@ -776,7 +776,7 @@ const Register = () => {
                     type="file"
                     required
                     onChange={(e) => setSelectedFile(e.target.files[0])}
-                    className="peer h-14 pt-8 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent text-slate-800 text-xs file:mr-2 file:py-1 file:px-2 file:border file:border-gray-300 file:rounded-md file:bg-gray-50 file:text-xs hover:file:bg-gray-100 shadow-none cursor-pointer"
+                    className="peer h-14 pt-7 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent text-slate-800 text-xs file:mr-2 file:py-1 file:px-2 file:border file:border-gray-300 file:rounded-md file:bg-gray-50 file:text-xs hover:file:bg-gray-100 shadow-none cursor-pointer"
                   />
                   <label
                     htmlFor="agrawal_image"
@@ -888,7 +888,7 @@ const Register = () => {
                         value={formData.spouse_dob}
                         onChange={onInputChange}
                         max={new Date().toISOString().split("T")[0]}
-                        className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                        className="peer h-14 pt-7 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                       />
                       <label
                         htmlFor="spouse_dob"
@@ -906,7 +906,7 @@ const Register = () => {
                         value={formData.f_mannidate}
                         onChange={onInputChange}
                         max={new Date().toISOString().split("T")[0]}
-                        className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                        className="peer h-14 pt-7 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                       />
                       <label
                         htmlFor="f_mannidate"
@@ -945,7 +945,7 @@ const Register = () => {
                     value={formData.f_mfdob}
                     onChange={onInputChange}
                     max={new Date().toISOString().split("T")[0]}
-                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-7 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="f_mfdob"
@@ -1445,8 +1445,8 @@ const Register = () => {
                       <div className="flex items-center gap-3 sm:gap-4">
                         <input
                           type="radio"
-                          name="membership_plan"
-                          value="5100.00"
+                          name="priceaga"
+                          value="5100"
                           checked={formData.priceaga === "5100"}
                           onChange={onInputChange}
                           className="w-5 h-5 min-w-[20px] text-rose-600 border-gray-300 focus:ring-rose-500"
@@ -1470,8 +1470,8 @@ const Register = () => {
                       <div className="flex items-center gap-3 sm:gap-4">
                         <input
                           type="radio"
-                          name="membership_plan"
-                          value="11100.00"
+                          name="priceaga"
+                          value="11100"
                           checked={formData.priceaga === "11100"}
                           onChange={onInputChange}
                           className="w-5 h-5 min-w-[20px] text-rose-600 border-gray-300 focus:ring-rose-500"
