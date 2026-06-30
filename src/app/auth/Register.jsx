@@ -94,8 +94,8 @@ const Register = () => {
     const isFloating = hasValue || isOpen;
     return `absolute left-0 transition-all duration-200 pointer-events-none ${
       isFloating
-        ? `top-3 translate-y-0 text-xs ${isOpen ? "text-primary" : "text-slate-400"}`
-        : "top-1/2 -translate-y-1/2 text-sm text-slate-400"
+        ? `top-3 translate-y-0 text-xs ${isOpen ? "text-primary" : "text-slate-500"}`
+        : "top-1/2 -translate-y-1/2 text-sm text-slate-500"
     }`;
   };
 
@@ -118,7 +118,7 @@ const Register = () => {
   });
   const states = stateData || [];
 
-  // ---------- Form State (pre‑filled for testing) ----------
+  // ---------- Form State with test defaults ----------
   const [formData, setFormData] = useState({
     // --- Personal ---
     appli_name: "",
@@ -127,14 +127,14 @@ const Register = () => {
     user_qualification: "",
     user_proof_identification: "",
     appli_email: "",
-    f_mgotra: "", // pick a gotra that exists in your list
+    f_mgotra: "", // adjust if your gotra list doesn't have this
     f_mdob: "",
     f_mblood: "",
-    f_mstate: "", // pick a state that exists in your list
+    f_mstate: "", // adjust if your state list doesn't have this
     native_place: "",
 
     // --- Contact ---
-    residential_add: "", //residential
+    residential_add: "",
     residential_landmark: "",
     residential_city: "",
     residential_pin: "",
@@ -142,6 +142,7 @@ const Register = () => {
     office_landmark: "",
     office_city: "",
     office_pin: "",
+    office_phone: "",
     mailaddress: "",
     donate_blood: "",
     whats_app: "",
@@ -152,14 +153,11 @@ const Register = () => {
     f_mannidate: "",
     spouse_name: "",
     user_pan_no: "",
-    spouse_mobile: "", //spouse phone number
-    spouse_dob: "", //date of birth
-    f_msblood: "", //blood
+    spouse_mobile: "",
+    spouse_dob: "",
     f_mfdob: "",
-    f_mqualispouse: "", //qualification
-    father_name: "", //father name
+    father_name: "",
     father_mobile: "",
-    f_nativeplace: "",
 
     // --- Introduction ---
     f_mintroby: "",
@@ -170,10 +168,8 @@ const Register = () => {
     org_name: "",
     org_type: "",
 
-    // --- Miscellaneous ---
-
     // --- Membership ---
-    priceaga: "5100.00", // or "11100.00"
+    priceaga: "5100", // "5100.00" or "11100.00"
   });
 
   const onInputChange = (e) => {
@@ -243,7 +239,7 @@ const Register = () => {
 
   // ---------- Verify OTP & Submit Registration ----------
   const handleVerifyOtp = async () => {
-    const otp = otpDigits.join(""); // joins array into a single string, e.g. "1234"
+    const otp = otpDigits.join("");
     if (otp.length !== 4) {
       toast.error("Please enter the complete 4‑digit OTP");
       return;
@@ -268,15 +264,14 @@ const Register = () => {
         office_add: "f_moffiadd",
         office_landmark: "f_moffiland",
         office_city: "f_mofficity",
-        office_phone: "f_moffiphone", // adjust to backend key
-
         office_pin: "f_moffipin",
+        office_phone: "f_moffiphone",
         spouse_name: "f_msname",
         spouse_mobile: "f_msmno",
         spouse_dob: "f_msdob",
         user_resident_to_bang_since: "f_mresibang",
         donate_blood: "donateblood",
-        priceaga: "priceaga", // or "f_mprice" / "amount" — adjust to your API
+        priceaga: "priceaga", // or "f_mprice" – adjust to backend key
       };
 
       // Append all text fields from formData mapping to backend keys
@@ -309,7 +304,7 @@ const Register = () => {
       if (response.data.code === 200 || response.data.code === "200") {
         toast.success("Registration successful!");
         setOtpDialogOpen(false);
-        navigate("/"); // or navigate to a success page
+        navigate("/");
       } else {
         toast.error(
           response.data.msg || "Registration failed. Please try again.",
@@ -465,7 +460,6 @@ const Register = () => {
         toast.success("OTP sent successfully!");
         setOtpTimer(60);
         setOtpDialogOpen(true);
-        // Focus first input after dialog opens
         setTimeout(() => otpInputRefs[0].current?.focus(), 100);
       } else {
         toast.error(response.data.msg || "Failed to send OTP.");
@@ -507,11 +501,11 @@ const Register = () => {
                     value={formData.appli_name}
                     onChange={onInputChange}
                     required
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="appli_name"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Name *
                   </label>
@@ -527,10 +521,14 @@ const Register = () => {
                       setActiveSelect(open ? "user_gender" : null)
                     }
                   >
-                    <SelectTrigger className="h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none">
+                    <SelectTrigger className="h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none ring-0 focus:ring-0 data-[state=open]:ring-0">
                       <SelectValue placeholder="" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent
+                      position="popper"
+                      sideOffset={4}
+                      className="border-0 shadow-lg ring-1 ring-slate-100 rounded-xl"
+                    >
                       {genderOptions.map((o) => (
                         <SelectItem key={o.value} value={o.value}>
                           {o.label}
@@ -556,10 +554,14 @@ const Register = () => {
                       setActiveSelect(open ? "f_mgotra" : null)
                     }
                   >
-                    <SelectTrigger className="h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none">
+                    <SelectTrigger className="h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none ring-0 focus:ring-0 data-[state=open]:ring-0">
                       <SelectValue placeholder="" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent
+                      position="popper"
+                      sideOffset={4}
+                      className="border-0 shadow-lg ring-1 ring-slate-100 rounded-xl"
+                    >
                       {gottras
                         .filter((g) => g?.gotra_name)
                         .map((g) => (
@@ -584,10 +586,14 @@ const Register = () => {
                       setActiveSelect(open ? "f_mstate" : null)
                     }
                   >
-                    <SelectTrigger className="h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none">
+                    <SelectTrigger className="h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-all bg-transparent flex justify-between items-center w-full shadow-none ring-0 focus:ring-0 data-[state=open]:ring-0">
                       <SelectValue placeholder="" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent
+                      position="popper"
+                      sideOffset={4}
+                      className="border-0 shadow-lg ring-1 ring-slate-100 rounded-xl"
+                    >
                       {states
                         .filter((s) => s?.state_name)
                         .map((s) => (
@@ -615,11 +621,11 @@ const Register = () => {
                     onChange={onInputChange}
                     required
                     maxLength={10}
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="user_mobile_number"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Mobile No *
                   </label>
@@ -634,11 +640,11 @@ const Register = () => {
                     value={formData.appli_email}
                     onChange={onInputChange}
                     required
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="email"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Email Address *
                   </label>
@@ -651,12 +657,13 @@ const Register = () => {
                     type="date"
                     value={formData.f_mdob}
                     onChange={onInputChange}
+                    max={new Date().toISOString().split("T")[0]}
                     required
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="f_mdob"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-focus:text-primary"
                   >
                     Date of Birth *
                   </label>
@@ -670,10 +677,14 @@ const Register = () => {
                       setActiveSelect(open ? "f_mblood" : null)
                     }
                   >
-                    <SelectTrigger className="h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none">
+                    <SelectTrigger className="h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none ring-0 focus:ring-0 data-[state=open]:ring-0">
                       <SelectValue placeholder="" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent
+                      position="popper"
+                      sideOffset={4}
+                      className="border-0 shadow-lg ring-1 ring-slate-100 rounded-xl"
+                    >
                       {bloodOptions.map((o) => (
                         <SelectItem key={o.value} value={o.value}>
                           {o.label}
@@ -698,11 +709,11 @@ const Register = () => {
                     value={formData.user_qualification}
                     onChange={onInputChange}
                     required
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="user_qualification"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Qualification *
                   </label>
@@ -718,10 +729,14 @@ const Register = () => {
                       setActiveSelect(open ? "user_proof_identification" : null)
                     }
                   >
-                    <SelectTrigger className="h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none">
+                    <SelectTrigger className="h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none ring-0 focus:ring-0 data-[state=open]:ring-0">
                       <SelectValue placeholder="" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent
+                      position="popper"
+                      sideOffset={4}
+                      className="border-0 shadow-lg ring-1 ring-slate-100 rounded-xl"
+                    >
                       {identificationOptions.map((o) => (
                         <SelectItem key={o.value} value={o.value}>
                           {o.label}
@@ -745,11 +760,11 @@ const Register = () => {
                     type="file"
                     required
                     onChange={(e) => setSelectedFileDoc(e.target.files[0])}
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent text-slate-800 text-xs file:mr-2 file:py-1 file:px-2 file:border file:border-gray-300 file:rounded-md file:bg-gray-50 file:text-xs hover:file:bg-gray-100 shadow-none cursor-pointer"
+                    className="peer h-14 pt-8 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent text-slate-800 text-xs file:mr-2 file:py-1 file:px-2 file:border file:border-gray-300 file:rounded-md file:bg-gray-50 file:text-xs hover:file:bg-gray-100 shadow-none cursor-pointer"
                   />
                   <label
                     htmlFor="user_proof_doc"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-focus:text-primary"
                   >
                     Upload your document proof *
                   </label>
@@ -761,11 +776,11 @@ const Register = () => {
                     type="file"
                     required
                     onChange={(e) => setSelectedFile(e.target.files[0])}
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent text-slate-800 text-xs file:mr-2 file:py-1 file:px-2 file:border file:border-gray-300 file:rounded-md file:bg-gray-50 file:text-xs hover:file:bg-gray-100 shadow-none cursor-pointer"
+                    className="peer h-14 pt-8 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent text-slate-800 text-xs file:mr-2 file:py-1 file:px-2 file:border file:border-gray-300 file:rounded-md file:bg-gray-50 file:text-xs hover:file:bg-gray-100 shadow-none cursor-pointer"
                   />
                   <label
                     htmlFor="agrawal_image"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-focus:text-primary"
                   >
                     Profile image *
                   </label>
@@ -787,11 +802,11 @@ const Register = () => {
                     value={formData.user_pan_no}
                     onChange={onInputChange}
                     required
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="user_pan_no"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     PAN No *
                   </label>
@@ -805,10 +820,14 @@ const Register = () => {
                       setActiveSelect(open ? "married" : null)
                     }
                   >
-                    <SelectTrigger className="h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none">
+                    <SelectTrigger className="h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none ring-0 focus:ring-0 data-[state=open]:ring-0">
                       <SelectValue placeholder="" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent
+                      position="popper"
+                      sideOffset={4}
+                      className="border-0 shadow-lg ring-1 ring-slate-100 rounded-xl"
+                    >
                       {marriedOptions.map((o) => (
                         <SelectItem key={o.value} value={o.value}>
                           {o.label}
@@ -832,11 +851,11 @@ const Register = () => {
                         placeholder=""
                         value={formData.spouse_name}
                         onChange={onInputChange}
-                        className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                        className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                       />
                       <label
                         htmlFor="spouse_name"
-                        className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                        className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                       >
                         Spouse Name
                       </label>
@@ -851,11 +870,11 @@ const Register = () => {
                         value={formData.spouse_mobile}
                         onChange={onInputChange}
                         maxLength={10}
-                        className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                        className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                       />
                       <label
                         htmlFor="spouse_mobile"
-                        className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                        className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                       >
                         Spouse Mobile No
                       </label>
@@ -868,11 +887,12 @@ const Register = () => {
                         type="date"
                         value={formData.spouse_dob}
                         onChange={onInputChange}
-                        className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                        max={new Date().toISOString().split("T")[0]}
+                        className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                       />
                       <label
                         htmlFor="spouse_dob"
-                        className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-focus:text-primary"
+                        className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-focus:text-primary"
                       >
                         Spouse DOB
                       </label>
@@ -885,11 +905,12 @@ const Register = () => {
                         type="date"
                         value={formData.f_mannidate}
                         onChange={onInputChange}
-                        className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                        max={new Date().toISOString().split("T")[0]}
+                        className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                       />
                       <label
                         htmlFor="f_mannidate"
-                        className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-focus:text-primary"
+                        className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-focus:text-primary"
                       >
                         Spouse Anniversary Date
                       </label>
@@ -906,11 +927,11 @@ const Register = () => {
                     value={formData.father_name}
                     onChange={onInputChange}
                     required
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="father_name"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Father Name *
                   </label>
@@ -923,13 +944,14 @@ const Register = () => {
                     type="date"
                     value={formData.f_mfdob}
                     onChange={onInputChange}
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    max={new Date().toISOString().split("T")[0]}
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
-                    htmlFor="father_dob"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-focus:text-primary"
+                    htmlFor="f_mfdob"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-focus:text-primary"
                   >
-                    DOB
+                    Father Date of Birth
                   </label>
                 </div>
 
@@ -943,11 +965,11 @@ const Register = () => {
                     onChange={onInputChange}
                     required
                     maxLength={10}
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="father_mobile"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Father's Mobile No *
                   </label>
@@ -962,11 +984,11 @@ const Register = () => {
                     value={formData.native_place}
                     onChange={onInputChange}
                     required
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="native_place"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Nativeplace *
                   </label>
@@ -988,11 +1010,11 @@ const Register = () => {
                     value={formData.residential_add}
                     onChange={onInputChange}
                     required
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent w-full"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent w-full"
                   />
                   <label
                     htmlFor="residential_add"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Residential Address *
                   </label>
@@ -1007,11 +1029,11 @@ const Register = () => {
                     value={formData.residential_landmark}
                     onChange={onInputChange}
                     required
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="residential_landmark"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Landmark *
                   </label>
@@ -1026,11 +1048,11 @@ const Register = () => {
                     value={formData.residential_city}
                     onChange={onInputChange}
                     required
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="residential_city"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     City *
                   </label>
@@ -1046,11 +1068,11 @@ const Register = () => {
                     onChange={onInputChange}
                     required
                     maxLength={6}
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="residential_pin"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Pincode *
                   </label>
@@ -1064,11 +1086,11 @@ const Register = () => {
                     placeholder=""
                     value={formData.office_add}
                     onChange={onInputChange}
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent w-full"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent w-full"
                   />
                   <label
                     htmlFor="office_add"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Office Address
                   </label>
@@ -1082,11 +1104,11 @@ const Register = () => {
                     placeholder=""
                     value={formData.office_landmark}
                     onChange={onInputChange}
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="office_landmark"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Landmark
                   </label>
@@ -1100,11 +1122,11 @@ const Register = () => {
                     placeholder=""
                     value={formData.office_city}
                     onChange={onInputChange}
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="office_city"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     City
                   </label>
@@ -1119,11 +1141,11 @@ const Register = () => {
                     value={formData.office_pin}
                     onChange={onInputChange}
                     maxLength={6}
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="office_pin"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Pincode
                   </label>
@@ -1137,11 +1159,11 @@ const Register = () => {
                     placeholder=""
                     value={formData.office_phone}
                     onChange={onInputChange}
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="office_phone"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Office No
                   </label>
@@ -1157,11 +1179,11 @@ const Register = () => {
                     onChange={onInputChange}
                     required
                     maxLength={10}
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="whats_app"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Whats App *
                   </label>
@@ -1177,10 +1199,14 @@ const Register = () => {
                       setActiveSelect(open ? "mailaddress" : null)
                     }
                   >
-                    <SelectTrigger className="h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none">
+                    <SelectTrigger className="h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none ring-0 focus:ring-0 data-[state=open]:ring-0">
                       <SelectValue placeholder="" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent
+                      position="popper"
+                      sideOffset={4}
+                      className="border-0 shadow-lg ring-1 ring-slate-100 rounded-xl"
+                    >
                       {mailAddressOptions.map((o) => (
                         <SelectItem key={o.value} value={o.value}>
                           {o.label}
@@ -1207,11 +1233,11 @@ const Register = () => {
                     value={formData.user_resident_to_bang_since}
                     onChange={onInputChange}
                     required
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="user_resident_to_bang_since"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Since Resident in Bangalore (Year) *
                   </label>
@@ -1227,10 +1253,14 @@ const Register = () => {
                       setActiveSelect(open ? "donate_blood" : null)
                     }
                   >
-                    <SelectTrigger className="h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none">
+                    <SelectTrigger className="h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none ring-0 focus:ring-0 data-[state=open]:ring-0">
                       <SelectValue placeholder="" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent
+                      position="popper"
+                      sideOffset={4}
+                      className="border-0 shadow-lg ring-1 ring-slate-100 rounded-xl"
+                    >
                       {yesorno.map((o) => (
                         <SelectItem key={o.value} value={o.value}>
                           {o.label}
@@ -1264,11 +1294,11 @@ const Register = () => {
                     value={formData.f_mintroby}
                     onChange={onInputChange}
                     required
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="f_mintroby"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Introducd By (Member Name) *
                   </label>
@@ -1283,11 +1313,11 @@ const Register = () => {
                     value={formData.f_mmemno}
                     onChange={onInputChange}
                     required
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="f_mmemno"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Membership No. of Introducer *
                   </label>
@@ -1303,11 +1333,11 @@ const Register = () => {
                     onChange={onInputChange}
                     required
                     maxLength={10}
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-all bg-transparent"
                   />
                   <label
                     htmlFor="f_mintrophone"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Phone No. of Introducer *
                   </label>
@@ -1322,11 +1352,11 @@ const Register = () => {
                     value={formData.f_mintroadd}
                     onChange={onInputChange}
                     required
-                    className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                    className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                   />
                   <label
                     htmlFor="f_mintroadd"
-                    className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                    className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                   >
                     Address of Introducer *
                   </label>
@@ -1342,10 +1372,14 @@ const Register = () => {
                       setActiveSelect(open ? "f_motherorga" : null)
                     }
                   >
-                    <SelectTrigger className="h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none">
+                    <SelectTrigger className="h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent flex justify-between items-center w-full shadow-none ring-0 focus:ring-0 data-[state=open]:ring-0">
                       <SelectValue placeholder="" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent
+                      position="popper"
+                      sideOffset={4}
+                      className="border-0 shadow-lg ring-1 ring-slate-100 rounded-xl"
+                    >
                       {yesorno.map((o) => (
                         <SelectItem key={o.value} value={o.value}>
                           {o.label}
@@ -1373,11 +1407,11 @@ const Register = () => {
                         placeholder=""
                         value={formData.org_name}
                         onChange={onInputChange}
-                        className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                        className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                       />
                       <label
                         htmlFor="org_name"
-                        className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                        className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                       >
                         Organization Name
                       </label>
@@ -1391,11 +1425,11 @@ const Register = () => {
                         placeholder=""
                         value={formData.org_type}
                         onChange={onInputChange}
-                        className="peer h-14 pt-6 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
+                        className="peer h-14 pt-10 pl-0 border-0 border-b border-b-gray-300 rounded-none outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-b-primary transition-all bg-transparent"
                       />
                       <label
                         htmlFor="org_type"
-                        className="absolute left-0 top-3 text-xs text-slate-400 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
+                        className="absolute left-0 top-3 text-xs text-slate-500 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:-translate-y-0 peer-focus:text-xs peer-focus:text-primary"
                       >
                         Organization Type
                       </label>
@@ -1413,7 +1447,7 @@ const Register = () => {
                           type="radio"
                           name="membership_plan"
                           value="5100.00"
-                          checked={formData.membership_plan === "5100.00"}
+                          checked={formData.priceaga === "5100"}
                           onChange={onInputChange}
                           className="w-5 h-5 min-w-[20px] text-rose-600 border-gray-300 focus:ring-rose-500"
                         />
@@ -1422,12 +1456,12 @@ const Register = () => {
                             Life Member
                           </span>
                           <span className="text-xs sm:text-sm text-slate-500 block leading-tight">
-                            Entry Fee: 100.00 | Membership: 5,000.00
+                            Entry Fee: 100 | Membership: 5,000
                           </span>
                         </div>
                       </div>
                       <span className="font-black text-slate-900 text-sm sm:text-lg ml-2 whitespace-nowrap">
-                        ₹ 5,100.00
+                        ₹ 5,100
                       </span>
                     </label>
 
@@ -1438,7 +1472,7 @@ const Register = () => {
                           type="radio"
                           name="membership_plan"
                           value="11100.00"
-                          checked={formData.membership_plan === "11100.00"}
+                          checked={formData.priceaga === "11100"}
                           onChange={onInputChange}
                           className="w-5 h-5 min-w-[20px] text-rose-600 border-gray-300 focus:ring-rose-500"
                         />
@@ -1447,12 +1481,12 @@ const Register = () => {
                             Patron Life Member
                           </span>
                           <span className="text-xs sm:text-sm text-slate-500 block leading-tight">
-                            Entry Fee: 100.00 | Membership: 11,000.00
+                            Entry Fee: 100 | Membership: 11,000
                           </span>
                         </div>
                       </div>
                       <span className="font-black text-slate-900 text-sm sm:text-lg ml-2 whitespace-nowrap">
-                        ₹ 11,100.00
+                        ₹ 11,100
                       </span>
                     </label>
                   </div>
@@ -1477,7 +1511,7 @@ const Register = () => {
                       <Loader2 className="w-4 h-4 animate-spin" /> Submitting...
                     </span>
                   ) : (
-                    "Send Otp"
+                    "Send OTP"
                   )}
                 </Button>
               </div>
